@@ -15,7 +15,8 @@ import { ComponentsModule } from '../components/components.module';
     CommonModule,
   ],
   exports: [
-    ArticulosComponent
+    ArticulosComponent,
+    FavoritosComponent
   ]
 })
 export class PagesModule { }
