@@ -1,0 +1,9 @@
+<div *ngIf="articulos && articulos.length > 0">
+    <div *ngFor="let articulo of articulos" class="card">
+      <img [src]="articulo.urlToImage" alt="Imagen del artículo">
+      <h3>{{ articulo.title }}</h3>
+      <p>{{ articulo.description }}</p>
+      <a href="{{ articulo.url }}">Leer más</a>
+    </div>
+  </div>
+  
