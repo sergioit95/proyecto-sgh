@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const EsquemaArticulo = new mongoose.Schema({
+  usuarioId:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'usuario',
+    required: true,
+  },
   autor: {
     type: String,
     required: true,
