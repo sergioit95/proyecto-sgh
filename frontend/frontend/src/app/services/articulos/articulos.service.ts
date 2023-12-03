@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http'
 import { Observable } from 'rxjs';
 import { Articulo } from 'src/app/interfaces/articulos';
 
-const baseUrl = 'http://localhost/api/articulos';
+const baseUrl = 'http://localhost:8080/api/articulos';
 @Injectable({
   providedIn: 'root'
 })
