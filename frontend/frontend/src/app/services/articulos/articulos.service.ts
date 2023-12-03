@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http'
-import { SGHNewsResponse } from 'src/app/interfaces/articulos';
+import { Observable } from 'rxjs';
+import { Articulo } from 'src/app/interfaces/articulos';
+
+const baseUrl = 'http://localhost/api/articulos';
 @Injectable({
   providedIn: 'root'
 })
@@ -9,8 +12,27 @@ export class ArticulosService {
   constructor(private http: HttpClient) {
    }
 
-   getArticulos(){
-    return this.http.get<SGHNewsResponse>('https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=bbd7e760111e43c6a828a328424ca804')
+   findAll(): Observable<Articulo[]>{
+    return this.http.get<Articulo[]>(`${baseUrl}`);
   }
-  
+  findById(id: any): Observable<Articulo>{
+    return this.http.get(`${baseUrl}{/id}}`);
+  }
+  create(articulo: Articulo): Observable<Articulo>{
+    return this.http.post(baseUrl, articulo);
+  }
+
+  update(articulo: Articulo): Observable<Articulo>{
+    return this.http.put(baseUrl, articulo);
+  }
+
+  deleteById(id: any): Observable<Articulo>{
+    return this.http.delete(`${baseUrl}{/id}`);
+  }
+
+  deleteAll(): Observable<Articulo>{
+    return this.http.delete(`${baseUrl}`);
+  }
+
+
 }
