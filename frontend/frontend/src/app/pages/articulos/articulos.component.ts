@@ -1,9 +1,8 @@
 // articulos.component.ts
 
 import { Component } from '@angular/core';
-import { Article, SGHNewsResponse } from 'src/app/interfaces/articulos';
+import { Articulo,  } from 'src/app/interfaces/articulos';
 import { ArticulosService } from 'src/app/services/articulos/articulos.service';
-import { FavoritosService } from 'src/app/services/favoritos/favoritos.service';
 
 @Component({
   selector: 'app-articulos',
@@ -20,26 +19,20 @@ export class ArticulosComponent {
     width: '200px',
   };
 
-  articulos: Article[] = [];
-
-  constructor(public articuloService: ArticulosService, public favoritosService: FavoritosService) {}
+  articulos?: Articulo[];
+  constructor(public articuloService: ArticulosService) {}
 
   ngOnInit(): void {
-    this.articuloService.getArticulos().subscribe((response: SGHNewsResponse) => {
-      console.log(response);
-      this.articulos = response.articles;
-    });
+    this.fetchArticulos();
+  }
+  private fetchArticulos() {
+    this.articuloService.findAll().subscribe({
+      next: value =>{
+        this.articulos = value;
+        console.log(value);
+      },
+      error: error => {console.log(error)}
+    })
   }
 
-  toggleFavoriteStatus(article: Article): void {
-    if (this.favoritosService.isFavorite(article)) {
-      this.favoritosService.removeFromFavorites(article);
-    } else {
-      this.favoritosService.addToFavorites(article);
-    }
-  }
-
-  getFavorites(): Article[] {
-    return this.favoritosService.getFavoritesSync(); // Agrega este método en FavoritosService
-  }
 }
