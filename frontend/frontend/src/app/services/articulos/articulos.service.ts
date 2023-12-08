@@ -1,38 +1,37 @@
+// articulo.service.ts
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http'
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Articulo } from 'src/app/interfaces/articulos';
-
-const baseUrl = 'http://localhost:8080/api/articulos';
+import { Articulo } from 'src/app/interfaces/articulo.model';
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class ArticulosService {
+export class ArticuloService {
+  private apiUrl = 'http://localhost:8080/api/articulos';
 
-  constructor(private http: HttpClient) {
-   }
+  constructor(private http: HttpClient) {}
 
-   findAll(): Observable<Articulo[]>{
-    return this.http.get<Articulo[]>(`${baseUrl}`);
-  }
-  findById(id: any): Observable<Articulo>{
-    return this.http.get(`${baseUrl}{/id}}`);
-  }
-  create(articulo: Articulo): Observable<Articulo>{
-    return this.http.post(baseUrl, articulo);
+  obtenerTodosLosArticulos(): Observable<Articulo[]> {
+    return this.http.get<Articulo[]>(this.apiUrl);
   }
 
-  update(articulo: Articulo): Observable<Articulo>{
-    return this.http.put(baseUrl, articulo);
+  obtenerArticuloPorId(id: number): Observable<Articulo> {
+    const url = `${this.apiUrl}/articulos/${id}`;
+    return this.http.get<Articulo>(url);
   }
 
-  deleteById(id: any): Observable<Articulo>{
-    return this.http.delete(`${baseUrl}{/id}`);
+  crearArticulo(idRedactor: number, articulo: Articulo): Observable<string> {
+    const url = `${this.apiUrl}/${idRedactor}/articulos`;
+    return this.http.post<string>(url, articulo);
   }
 
-  deleteAll(): Observable<Articulo>{
-    return this.http.delete(`${baseUrl}`);
+  modificarArticulo(idRedactor: number, idArticulo: number, articulo: Articulo): Observable<string> {
+    const url = `${this.apiUrl}/${idRedactor}/articulos/${idArticulo}`;
+    return this.http.put<string>(url, articulo);
   }
 
-
+  eliminarArticulo(idRedactor: number, idArticulo: number): Observable<string> {
+    const url = `${this.apiUrl}/${idRedactor}/articulos/${idArticulo}`;
+    return this.http.delete<string>(url);
+  }
 }
