@@ -88,7 +88,7 @@ public class ArticuloService {
                     // Eliminar el artículo
                     articuloRepository.delete(articuloExistente);
                 } else {
-                	throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No tienes permiso para eliminar este artículo")
+                	throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No tienes permiso para eliminar este artículo");
                 }
             } else {
                 throw new org.springframework.web.server.ResponseStatusException(HttpStatus.NOT_FOUND, "Articulo no encontrado");
