@@ -46,7 +46,7 @@ public class ArticuloService {
         }
     }
 
-    public void modificarArticulo(Long idRedactor, Long idArticulo, Articulo articulo) throws AccessDeniedException {
+    public void modificarArticulo(Long idRedactor, Long idArticulo, Articulo articulo) throws AccessDeniedException  {
         // Verificar si el redactor existe
         Optional<Redactor> redactorOptional = redactorRepository.findById(idRedactor);
         if (redactorOptional.isPresent()) {
