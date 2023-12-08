@@ -42,7 +42,7 @@ public class ArticuloService {
             // Guardar el artículo
             articuloRepository.save(articulo);
         } else {
-            throw new org.springframework.web.server.ResponseStatusException(HttpStatus.NOT_FOUND, "Redactor no encontrado");
+            throw new org.springframework.web.server.ResponseStatusException(HttpStatus.NOT_FOUND, "Artículo no encontrado");
         }
     }
 
