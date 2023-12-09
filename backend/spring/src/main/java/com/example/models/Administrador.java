@@ -1,13 +1,13 @@
 package com.example.models;
+
+import java.util.List;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import com.example.models.Redactor;
-import java.util.List;
-import com.example.models.Usuario;
 @Entity
 public class Administrador {
     @Id
@@ -100,7 +100,5 @@ public class Administrador {
 		this.usuarios = usuarios;
 	}
 
-    // Otros campos y métodos
-
-    // Getters y setters
+  
 }

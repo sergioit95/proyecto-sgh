@@ -1,4 +1,7 @@
 package com.example.models;
+
+import com.example.models.*;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,7 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import com.example.models.*;
+
 import java.util.List;
 
 @Entity
@@ -22,7 +25,7 @@ public class Usuario {
     private String password;
    
     @ManyToOne
-    @JoinColumn(name = "administrador_id") // Asegúrate de que el nombre de la columna sea correcto
+    @JoinColumn(name = "administrador_id") 
     private Administrador administrador;
    
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
