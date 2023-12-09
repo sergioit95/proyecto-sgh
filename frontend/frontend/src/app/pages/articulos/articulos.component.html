@@ -1,9 +1,12 @@
-<div *ngIf="articulos && articulos.length > 0">
-    <div *ngFor="let articulo of articulos" class="card">
-      <img [src]="articulo.urlToImage" alt="Imagen del artículo">
-      <h3>{{ articulo.title }}</h3>
-      <p>{{ articulo.description }}</p>
-      <a href="{{ articulo.url }}">Leer más</a>
-    </div>
+  <div class="tarjeta-lista">
+    <h1>Lista de artículos</h1>
+    <ul>
+      <li class="tarjeta-articulo" *ngFor="let articulo of articulos; let i = index">
+        <img src="{{articulo.imagenUrl}}" alt="Imagen del artículo" class="imagen-articulo">
+        <div class="contenido-articulo">
+          <span class="id-articulo">{{articulo.id}}</span>
+          <h2 class="titulo-articulo">{{articulo.titulo}}</h2>
+        </div>
+      </li>
+    </ul>
   </div>
-  

@@ -1,14 +1,14 @@
+// articulos.component.ts
+
 import { Component } from '@angular/core';
-import { Article, SGHNewsResponse } from 'src/app/interfaces/articulos';
-import { ArticulosService } from 'src/app/services/articulos/articulos.service';
+import { Articulo,  } from 'src/app/interfaces/articulo.model';
+import { ArticuloService } from 'src/app/services/articulos/articulos.service';
 
 @Component({
   selector: 'app-articulos',
   templateUrl: './articulos.component.html',
   styleUrls: ['./articulos.component.scss'],
-  providers: [
-    ArticulosService
-  ]
+  providers: [ArticuloService], // FavoritosService se debe proveer en AppModule o en el módulo correspondiente
 })
 export class ArticulosComponent {
   styles = {
@@ -17,17 +17,13 @@ export class ArticulosComponent {
     'align-items': 'center',
     padding: '20px',
     width: '200px',
+  };
+
+  articulos?: Articulo[];
+  constructor(public articuloService: ArticuloService) {}
+
+  ngOnInit(): void {
   }
+ 
 
-  articulos: Article[] = [];
-
-  constructor(private articuloService: ArticulosService){}
-
-  ngOnInit(): void{
-    this.articuloService.getArticulos()
-      .subscribe((response: SGHNewsResponse) =>{
-        console.log(response);
-        this.articulos = response.articles;
-      });
-  }
 }
