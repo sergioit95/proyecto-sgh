@@ -1,19 +1,30 @@
 package com.example.models;
 
 
+import java.sql.Blob;
+import java.sql.Date;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Articulo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,16 +32,13 @@ public class Articulo {
 
     private String titulo;
     private String contenido;
-    private LocalDateTime fechaPublicacion;
+    private Date fechaPublicacion;
 
-    @Lob // Para campos grandes como imágenes
-    private byte[] imagen;
+    @JsonIgnore
+    private Blob imagen;
 
-    @ManyToOne
-    @JoinColumn(name = "usuario_id") // Asegúrate de que el nombre de la columna sea correcto
-    private Usuario usuario;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "redactor_id")
     private Redactor redactor;
 
@@ -38,13 +46,12 @@ public class Articulo {
         // Constructor vacío requerido por JPA
     }
 
-    public Articulo(String titulo, String contenido, LocalDateTime fechaPublicacion, byte[] imagen, Usuario usuario,
+    public Articulo(String titulo, String contenido, Date fechaPublicacion, Blob imagen,
             Redactor redactor) {
         this.titulo = titulo;
         this.contenido = contenido;
         this.fechaPublicacion = fechaPublicacion;
         this.imagen = imagen;
-        this.usuario = usuario;
         this.redactor = redactor;
     }
 
@@ -74,29 +81,23 @@ public class Articulo {
         this.contenido = contenido;
     }
 
-    public LocalDateTime getFechaPublicacion() {
+    public Date getFechaPublicacion() {
         return fechaPublicacion;
     }
 
-    public void setFechaPublicacion(LocalDateTime fechaPublicacion) {
+    public void setFechaPublicacion(Date fechaPublicacion) {
         this.fechaPublicacion = fechaPublicacion;
     }
 
-    public byte[] getImagen() {
+    public Blob getImagen() {
         return imagen;
     }
 
-    public void setImagen(byte[] imagen) {
+    public void setImagen(Blob imagen) {
         this.imagen = imagen;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
+    
 
     public Redactor getRedactor() {
         return redactor;

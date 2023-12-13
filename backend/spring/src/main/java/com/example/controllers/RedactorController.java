@@ -1,15 +1,21 @@
 package com.example.controllers;
+import java.sql.Blob;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.example.models.Articulo;
 import com.example.models.Redactor;
-import com.example.services.ArticuloService;
 import com.example.services.RedactorService;
-import java.util.List;
-import java.util.Optional;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.example.dto.*;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/redactores")
 public class RedactorController {
@@ -17,62 +23,49 @@ public class RedactorController {
     @Autowired
     private RedactorService redactorService;
 
-    @Autowired
-    private ArticuloService articuloService;
-
     @GetMapping
-    public List<Redactor> obtenerTodosLosRedactores() {
-        return redactorService.obtenerTodosLosRedactores();
+    public ResponseEntity<List<Redactor>> obtenerTodosLosRedactores() {
+        List<Redactor> redactores = redactorService.obtenerTodosLosRedactores();
+        return ResponseEntity.ok(redactores);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Redactor> obtenerRedactorPorId(@PathVariable Long id) {
-        Optional<Redactor> redactor = redactorService.obtenerRedactorPorId(id);
-        return redactor.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-    }
-
-    @PostMapping
-    public ResponseEntity<String> crearRedactor(@RequestBody Redactor redactor) {
-        redactorService.crearRedactor(redactor);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Redactor creado exitosamente");
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<String> modificarRedactor(@PathVariable Long id, @RequestBody Redactor redactor) {
-        redactorService.modificarRedactor(id, redactor);
-        return ResponseEntity.ok("Información del redactor modificada exitosamente");
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminarRedactor(@PathVariable Long id) {
-        redactorService.eliminarRedactor(id);
-        return ResponseEntity.ok("Redactor eliminado exitosamente");
-    }
-
-    @PostMapping("/{idRedactor}/articulos")
-    public ResponseEntity<String> crearArticulo(@PathVariable Long idRedactor, @RequestBody Articulo articulo) {
-        articuloService.crearArticulo(idRedactor, articulo);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Artículo creado exitosamente");
-    }
-
-    @PutMapping("/{idRedactor}/articulos/{idArticulo}")
-    public ResponseEntity<String> modificarArticulo(
-            @PathVariable Long idRedactor, @PathVariable Long idArticulo, @RequestBody Articulo articulo) {
+    @PostMapping(path = "/{redactorId}/articulos", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Articulo> crearArticulo(@PathVariable Long redactorId, @RequestParam("articulo") String articuloStr, @RequestParam("imagen") MultipartFile imagen) {
         try {
-            articuloService.modificarArticulo(idRedactor, idArticulo, articulo);
-            return ResponseEntity.ok("Artículo modificado exitosamente");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al modificar el artículo");
+            // Convertir el String articuloStr a un objeto Articulo
+            ObjectMapper objectMapper = new ObjectMapper();
+            Articulo articulo = objectMapper.readValue(articuloStr, Articulo.class);
+            
+            // Convertir MultipartFile a Blob
+            Blob imagenBlob = new javax.sql.rowset.serial.SerialBlob(imagen.getBytes());
+            articulo.setImagen(imagenBlob);
+            
+            // Aquí puedes usar redactorId para asociar el nuevo artículo con el redactor correcto
+            Articulo nuevoArticulo = redactorService.crearArticulo(articulo, redactorId);
+            
+            return ResponseEntity.ok(nuevoArticulo);
+        } catch (Exception ex) {
+            throw new RuntimeException("Error al procesar el JSON o convertir la imagen", ex);
         }
     }
+    
+   
+    @PutMapping("/articulos/{id}")
+    public ResponseEntity<Articulo> modificarArticulo(@PathVariable Long id, @RequestBody Articulo articulo) {
+        articulo.setId(id);
+        Articulo articuloModificado = redactorService.modificarArticulo(articulo);
+        return ResponseEntity.ok(articuloModificado);
+    }
 
-    @DeleteMapping("/{idRedactor}/articulos/{idArticulo}")
-    public ResponseEntity<String> eliminarArticulo(@PathVariable Long idRedactor, @PathVariable Long idArticulo) {
-        try {
-            articuloService.eliminarArticulo(idRedactor, idArticulo);
-            return ResponseEntity.ok("Artículo eliminado exitosamente");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al eliminar el artículo");
-        }
+    @DeleteMapping("/articulos/{id}")
+    public ResponseEntity<Void> eliminarArticulo(@PathVariable Long id) {
+        redactorService.eliminarArticulo(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/articulos")
+    public ResponseEntity<List<Articulo>> obtenerTodosLosArticulos() {
+        List<Articulo> articulos = redactorService.obtenerTodosLosArticulos();
+        return ResponseEntity.ok(articulos);
     }
 }

@@ -7,4 +7,5 @@ import com.example.models.Articulo;
 
 @Repository
 public interface ArticuloRepository extends JpaRepository<Articulo, Long> {
+	
 }

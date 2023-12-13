@@ -1,33 +1,35 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Redactor } from '../../interfaces/redactor.model';
+import { Articulo } from '../../interfaces/articulo.model';
+import { Redactor } from 'src/app/interfaces/redactor.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RedactorService {
-  private apiUrl = '/api/redactores';
 
-  constructor(private http: HttpClient) {}
+  private apiUrl = 'http://localhost:8080/api/redactores';
 
-  obtenerTodosLosRedactores(): Observable<Redactor[]> {
-    return this.http.get<Redactor[]>(this.apiUrl);
+  constructor(private http: HttpClient) { }
+  
+
+  crearArticulo(redactorId: number, articulo: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${redactorId}/articulos`, articulo);
   }
 
-  obtenerRedactorPorId(id: number): Observable<Redactor> {
-    return this.http.get<Redactor>(`${this.apiUrl}/${id}`);
+  modificarArticulo(articulo: FormData): Observable<Articulo> {
+    return this.http.put<Articulo>(`${this.apiUrl}/articulos/${articulo.get('id')}`, articulo);
   }
 
-  crearRedactor(redactor: Redactor): Observable<string> {
-    return this.http.post<string>(this.apiUrl, redactor);
+  eliminarArticulo(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/articulos/${id}`);
   }
 
-  modificarRedactor(id: number, redactor: Redactor): Observable<string> {
-    return this.http.put<string>(`${this.apiUrl}/${id}`, redactor);
+  obtenerTodosLosArticulos(): Observable<Articulo[]> {
+    return this.http.get<Articulo[]>(`${this.apiUrl}/articulos`);
   }
-
-  eliminarRedactor(id: number): Observable<string> {
-    return this.http.delete<string>(`${this.apiUrl}/${id}`);
+  obtenerRedactores(): Observable<Redactor[]> {
+    return this.http.get<Redactor[]>(`${this.apiUrl}`);
   }
 }

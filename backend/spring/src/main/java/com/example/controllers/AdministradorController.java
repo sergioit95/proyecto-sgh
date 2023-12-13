@@ -1,4 +1,6 @@
 package com.example.controllers;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,54 +9,57 @@ import org.springframework.web.bind.annotation.*;
 import com.example.services.AdministradorService;
 import com.example.models.Administrador;
 import com.example.models.Redactor;
-import com.example.models.Usuario;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/administradores")
 public class AdministradorController {
+
     @Autowired
     private AdministradorService administradorService;
+    
+ 
 
-    @GetMapping
-    public List<Administrador> obtenerTodosLosAdministradores() {
-        return administradorService.obtenerTodosLosAdministradores();
+    @GetMapping("/")
+    public ResponseEntity<List<Administrador>> obtenerTodosLosAdministradores() {
+        List<Administrador> administradores = administradorService.obtenerTodosLosAdministradores();
+        return ResponseEntity.ok(administradores);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Administrador> obtenerAdministradorPorId(@PathVariable Long id) {
-        Administrador administrador = administradorService.obtenerAdministradorPorId(id);
-        return administrador != null ? ResponseEntity.ok(administrador) : ResponseEntity.notFound().build();
+    @GetMapping("/redactores")
+    public ResponseEntity<List<Redactor>> obtenerTodosLosRedactores() {
+        List<Redactor> redactores = administradorService.obtenerTodosLosRedactores();
+        return ResponseEntity.ok(redactores);
     }
 
-    @PostMapping
-    public ResponseEntity<String> crearAdministrador(@RequestBody Administrador administrador) {
-        administradorService.crearAdministrador(administrador);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Administrador creado exitosamente");
+    @PostMapping("/")
+    public ResponseEntity<Administrador> crearAdministrador(@RequestBody Administrador administrador) {
+        Administrador nuevoAdministrador = administradorService.crearAdministrador(administrador);
+        return new ResponseEntity<>(nuevoAdministrador, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Administrador> modificarAdministrador(@PathVariable Long id, @RequestBody Administrador administrador) {
+        Administrador administradorModificado = administradorService.modificarAdministrador(administrador);
+        return new ResponseEntity<>(administradorModificado, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminarAdministrador(@PathVariable Long id) {
+    public ResponseEntity<Void> eliminarAdministrador(@PathVariable Long id) {
         administradorService.eliminarAdministrador(id);
-        return ResponseEntity.ok("Administrador eliminado exitosamente");
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/{idAdmin}/redactores")
-    public ResponseEntity<String> crearRedactor(@PathVariable Long idAdmin, @RequestBody Redactor redactor) {
-        administradorService.crearRedactor(idAdmin, redactor);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Redactor creado exitosamente");
+    @PostMapping("/redactores")
+    public ResponseEntity<Redactor> crearRedactor(@RequestBody Redactor redactor) {
+        Redactor nuevoRedactor = administradorService.crearRedactor(redactor);
+        return new ResponseEntity<>(nuevoRedactor, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{idAdmin}/redactores/{idRedactor}")
-    public ResponseEntity<String> eliminarRedactor(@PathVariable Long idAdmin, @PathVariable Long idRedactor) {
-        administradorService.eliminarRedactor(idAdmin, idRedactor);
-        return ResponseEntity.ok("Redactor eliminado exitosamente");
+    @DeleteMapping("/redactores/{id}")
+    public ResponseEntity<Void> eliminarRedactor(@PathVariable Long id) {
+        administradorService.eliminarRedactor(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("/{idAdmin}/usuarios/{idUsuario}")
-    public ResponseEntity<String> eliminarUsuario(@PathVariable Long idAdmin, @PathVariable Long idUsuario) {
-        administradorService.eliminarUsuario(idAdmin, idUsuario);
-        return ResponseEntity.ok("Usuario eliminado exitosamente");
-    }
+    
 }

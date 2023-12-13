@@ -1,29 +1,20 @@
-// articulos.component.ts
-
-import { Component } from '@angular/core';
-import { Articulo,  } from 'src/app/interfaces/articulo.model';
-import { ArticuloService } from 'src/app/services/articulos/articulos.service';
+import { Component, OnInit } from '@angular/core';
+import { ArticuloService } from '../../services/articulos/articulos.service'; // Asegúrate de importar tu servicio de Articulo
+import { Articulo } from '../../interfaces/articulo.model'; // Asegúrate de importar tu modelo de Articulo
 
 @Component({
   selector: 'app-articulos',
   templateUrl: './articulos.component.html',
-  styleUrls: ['./articulos.component.scss'],
-  providers: [ArticuloService], // FavoritosService se debe proveer en AppModule o en el módulo correspondiente
+  styleUrls: ['./articulos.component.scss']
 })
-export class ArticulosComponent {
-  styles = {
-    display: 'flex',
-    'flex-direction': 'column',
-    'align-items': 'center',
-    padding: '20px',
-    width: '200px',
-  };
+export class ArticulosComponent implements OnInit {
+  articulos: Articulo[] = [];
 
-  articulos?: Articulo[];
-  constructor(public articuloService: ArticuloService) {}
+  constructor(private articuloService: ArticuloService) { }
 
   ngOnInit(): void {
+    this.articuloService.obtenerTodosLosArticulos().subscribe(articulos => {
+      this.articulos = articulos;
+    });
   }
- 
-
 }

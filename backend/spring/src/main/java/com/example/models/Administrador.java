@@ -1,5 +1,6 @@
 package com.example.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -18,14 +19,12 @@ public class Administrador {
     private String apellidos;
     private String email;
     private String password;
-
-
+    
     @OneToMany(mappedBy = "administrador", cascade = CascadeType.ALL)
-    private List<Redactor> redactores;
+    private List<Redactor> redactores = new ArrayList<>();
 
 
-    @OneToMany(mappedBy = "administrador", cascade = CascadeType.ALL)
-    private List<Usuario> usuarios;
+
 
 
 	public Administrador() {
@@ -33,7 +32,7 @@ public class Administrador {
 	}
 
 	public Administrador(Long id, String nombre, String apellidos, String email, String password,
-			List<Redactor> redactores, List<Usuario> usuarios) {
+			List<Redactor> redactores) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
@@ -41,7 +40,6 @@ public class Administrador {
 		this.email = email;
 		this.password = password;
 		this.redactores = redactores;
-		this.usuarios = usuarios;
 	}
 
 	public Long getId() {
@@ -92,13 +90,6 @@ public class Administrador {
 		this.redactores = redactores;
 	}
 
-	public List<Usuario> getUsuarios() {
-		return usuarios;
-	}
-
-	public void setUsuarios(List<Usuario> usuarios) {
-		this.usuarios = usuarios;
-	}
 
   
 }

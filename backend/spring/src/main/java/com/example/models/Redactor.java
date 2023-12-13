@@ -2,17 +2,23 @@ package com.example.models;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+
 import jakarta.persistence.CascadeType;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Redactor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,11 +29,11 @@ public class Redactor {
     private String email;
     private String password;
 
-    @OneToMany(mappedBy = "redactor", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "redactor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Articulo> articulos;
 
-    @ManyToOne // Agrega esta anotación para indicar la relación ManyToOne con Administrador
-    @JoinColumn(name = "administrador_id") // Asegúrate de que el nombre de la columna sea correcto
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "administrador_id")
     private Administrador administrador;
 
     public Redactor() {

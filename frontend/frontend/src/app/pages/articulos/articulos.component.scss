@@ -1,40 +1,12 @@
-.tarjeta-lista {
-  width: 80%;
-  max-width: 600px;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
-  margin-top: 5%;
-}
+div {
+  margin: 1em 0;
 
-.tarjeta-articulo {
-  display: flex;
-  border-bottom: 1px solid #ccc;
-  transition: background-color 0.3s;
-}
+  h2 {
+    font-size: 1.5em;
+    margin-bottom: 0.5em;
+  }
 
-.tarjeta-articulo:hover {
-  background-color: #f5f5f5;
-}
-
-.imagen-articulo {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 5px 0 0 5px;
-}
-
-.contenido-articulo {
-  padding: 10px;
-}
-
-.id-articulo {
-  font-size: 14px;
-  color: #888;
-}
-
-.titulo-articulo {
-  margin: 0;
-  color: #333;
+  p {
+    margin: 0;
+  }
 }

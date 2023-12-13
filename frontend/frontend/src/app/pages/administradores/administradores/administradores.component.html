@@ -1,0 +1,66 @@
+<div>
+  <h2>Crear Administrador</h2>
+  <form [formGroup]="administradorForm" (ngSubmit)="crearAdministrador()">
+    <div>
+      <label for="nombre">Nombre</label>
+      <input id="nombre" type="text" formControlName="nombre">
+    </div>
+
+    <div>
+      <label for="apellidos">Apellidos</label>
+      <input id="apellidos" type="text" formControlName="apellidos">
+    </div>
+
+    <div>
+      <label for="email">Email</label>
+      <input id="email" type="email" formControlName="email">
+    </div>
+
+    <div>
+      <label for="password">Contraseña</label>
+      <input id="password" type="password" formControlName="password">
+    </div>
+
+    <button type="submit">Crear Administrador</button>
+  </form>
+</div>
+
+<div>
+  <h2>Crear Redactor</h2>
+  <form [formGroup]="redactorForm" (ngSubmit)="crearRedactor()">
+    <div>
+      <label for="nombreRedactor">Nombre</label>
+      <input id="nombreRedactor" type="text" formControlName="nombre">
+    </div>
+
+    <div>
+      <label for="apellidosRedactor">Apellidos</label>
+      <input id="apellidosRedactor" type="text" formControlName="apellidos">
+    </div>
+
+    <div>
+      <label for="emailRedactor">Email</label>
+      <input id="emailRedactor" type="email" formControlName="email">
+    </div>
+
+    <div>
+      <label for="passwordRedactor">Contraseña</label>
+      <input id="passwordRedactor" type="password" formControlName="password">
+    </div>
+
+    <button type="submit">Crear Redactor</button>
+  </form>
+</div>
+
+
+
+<div>
+  <h2>Redactores</h2>
+  <ul>
+    <li *ngFor="let redactor of redactores">
+      {{ redactor.nombre }} {{ redactor.apellidos }}
+      <button (click)="cargarRedactores()">Cargar</button>
+      <button (click)="eliminarRedactor(redactor.id || 0)">Eliminar</button>
+    </li>
+  </ul>
+</div>
