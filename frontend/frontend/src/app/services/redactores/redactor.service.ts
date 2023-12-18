@@ -18,8 +18,8 @@ export class RedactorService {
     return this.http.post(`${this.apiUrl}/${redactorId}/articulos`, articulo);
   }
 
-  modificarArticulo(articulo: FormData): Observable<Articulo> {
-    return this.http.put<Articulo>(`${this.apiUrl}/articulos/${articulo.get('id')}`, articulo);
+  modificarArticulo(redactorId: number, articuloId: number, articulo: FormData): Observable<Articulo> {
+    return this.http.put<Articulo>(`${this.apiUrl}/${redactorId}/articulos/${articuloId}`, articulo);
   }
 
   eliminarArticulo(id: number): Observable<void> {

@@ -4,6 +4,8 @@ import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 import { IconComponent } from './icon/icon.component';
 import { TitleComponent } from './title/title.component';
+import { LoginErrorComponent } from './loginError/loginerror.component';
+import { RouterModule } from '@angular/router';
 
 
 
@@ -12,14 +14,17 @@ import { TitleComponent } from './title/title.component';
     FooterComponent,
     HeaderComponent,
     IconComponent,
-    TitleComponent
+    TitleComponent,
+    LoginErrorComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    RouterModule
   ],
   exports: [
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    LoginErrorComponent
   ]
 })
 export class ComponentsModule { }

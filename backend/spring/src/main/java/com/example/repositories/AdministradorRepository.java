@@ -7,4 +7,6 @@ import com.example.models.Administrador;
 
 @Repository
 public interface AdministradorRepository extends JpaRepository<Administrador, Long> {
+    Administrador findByEmail(String email);
+
 }

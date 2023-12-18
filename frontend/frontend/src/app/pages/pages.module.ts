@@ -8,12 +8,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AdministradoresComponent } from './administradores/administradores/administradores.component';
 import { AdministradorService } from '../services/administradores/administrador.service';
 import { RedactoresComponent } from './redactores/redactores/redactores.component';
+import { LoginComponent } from './login/login/login.component';
+import { AuthService } from '../services/auth/auth.service';
 
 @NgModule({
   declarations: [
     AdministradoresComponent,
     RedactoresComponent,
-    ArticulosComponent
+    ArticulosComponent,
+    LoginComponent
   ],
   imports: [
     CommonModule,
@@ -23,12 +26,14 @@ import { RedactoresComponent } from './redactores/redactores/redactores.componen
   exports: [
     AdministradoresComponent,
     RedactoresComponent,
-    ArticulosComponent
+    ArticulosComponent,
+    LoginComponent
   ],
   providers: [
     AdministradorService,
     RedactorService,
-    ArticuloService
+    ArticuloService,
+    AuthService
 
   ]
 })

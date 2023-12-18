@@ -7,13 +7,16 @@ import { Articulo } from '../../interfaces/articulo.model'; // Asegúrate de imp
   providedIn: 'root'
 })
 export class ArticuloService {
-  private apiUrl = 'http://localhost:8080/api/articulos';
-
+  private apiUrl = 'http://localhost:8080/api/articulos/';
+  
   constructor(private http: HttpClient) { }
 
   obtenerTodosLosArticulos(): Observable<Articulo[]> {
     return this.http.get<Articulo[]>(this.apiUrl);
   }
+  
+
+ 
 
   // otros métodos del servicio
 }

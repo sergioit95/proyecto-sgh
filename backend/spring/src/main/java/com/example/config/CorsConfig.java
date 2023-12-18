@@ -1,4 +1,5 @@
 package com.example.config;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -19,7 +20,8 @@ public class CorsConfig {
         config.addAllowedMethod("POST");
         config.addAllowedMethod("PUT");
         config.addAllowedMethod("DELETE");
-        source.registerCorsConfiguration("/api/**", config); // Configura la ruta que necesites
+        config.addAllowedMethod("OPTIONS"); // Permitir solicitudes OPTIONS
+        source.registerCorsConfiguration("/**", config); // Configura la ruta que necesites
         return new CorsFilter(source);
     }
 }

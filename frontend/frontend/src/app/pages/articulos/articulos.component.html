@@ -1,9 +1,13 @@
-<div *ngIf="articulos && articulos.length > 0">
-  <div *ngFor="let articulo of articulos">
-    <h2>{{ articulo.titulo }}</h2>
-    <p>{{ articulo.contenido }}</p>
+<h1>Artículos</h1>
+<div class="row">
+  <div class="col-md-4" *ngFor="let articulo of articulos">
+    <div class="card">
+      <img *ngIf="articulo.imagenBase64" [src]="getImagenUrl(articulo.imagenBase64)" class="card-img-top" alt="Imagen del artículo">
+      <div class="card-body">
+        <h5 class="card-title">{{ articulo.titulo }}</h5>
+        <p class="card-text">{{ articulo.contenido }}</p>
+        <p class="card-text"><small class="text-muted">{{ articulo.fechaPublicacion | date:'dd/MM/yyyy' }}</small></p>
+      </div>
+    </div>
   </div>
-</div>
-<div *ngIf="articulos && articulos.length === 0">
-  <p>No hay artículos para mostrar.</p>
 </div>

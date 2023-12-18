@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.repositories.AdministradorRepository;
 import com.example.repositories.RedactorRepository;
-import com.example.repositories.UsuarioRepository;
 import com.example.models.Administrador;
 import com.example.models.Redactor;
 

@@ -12,8 +12,8 @@ import com.example.models.Articulo;
 import com.example.models.Redactor;
 import com.example.services.RedactorService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.example.dto.*;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -50,19 +50,24 @@ public class RedactorController {
     }
     
    
-    @PutMapping("/articulos/{id}")
-    public ResponseEntity<Articulo> modificarArticulo(@PathVariable Long id, @RequestBody Articulo articulo) {
+    @PutMapping("/{redactorId}/articulos/{id}")
+    public ResponseEntity<Articulo> modificarArticulo(@PathVariable Long redactorId, @PathVariable Long id, @RequestParam("articulo") String articuloStr, @RequestParam("imagen") MultipartFile imagen) throws JsonMappingException, JsonProcessingException {
+        Articulo articulo = new ObjectMapper().readValue(articuloStr, Articulo.class);
         articulo.setId(id);
-        Articulo articuloModificado = redactorService.modificarArticulo(articulo);
+        // Aquí puedes manejar la imagen como necesites
+        Articulo articuloModificado = redactorService.modificarArticulo(articulo, redactorId);
         return ResponseEntity.ok(articuloModificado);
     }
 
     @DeleteMapping("/articulos/{id}")
-    public ResponseEntity<Void> eliminarArticulo(@PathVariable Long id) {
-        redactorService.eliminarArticulo(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> eliminarArticulo(@PathVariable Long id) {
+        try {
+            redactorService.eliminarArticulo(id);
+            return ResponseEntity.ok("Artículo eliminado con éxito");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
-
     @GetMapping("/articulos")
     public ResponseEntity<List<Articulo>> obtenerTodosLosArticulos() {
         List<Articulo> articulos = redactorService.obtenerTodosLosArticulos();

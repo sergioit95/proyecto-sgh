@@ -4,20 +4,22 @@ package com.example.models;
 import java.sql.Blob;
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.Base64;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.PostLoad;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -36,6 +38,8 @@ public class Articulo {
 
     @JsonIgnore
     private Blob imagen;
+    @Transient
+    private String imagenBase64;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -106,4 +110,24 @@ public class Articulo {
     public void setRedactor(Redactor redactor) {
         this.redactor = redactor;
     }
+    public String getImagenBase64() {
+        return imagenBase64;
+    }
+
+    public void setImagenBase64(String imagenBase64) {
+        this.imagenBase64 = imagenBase64;
+    }
+    
+    @PostLoad
+    public void convertBlobToBase64() {
+        if (this.imagen != null) {
+            try {
+                byte[] bytes = imagen.getBytes(1, (int)imagen.length());
+                imagenBase64 = Base64.getEncoder().encodeToString(bytes);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+  
 }

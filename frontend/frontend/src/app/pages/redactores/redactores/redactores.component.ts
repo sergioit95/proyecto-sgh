@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RedactorService } from '../../../services/redactores/redactor.service';
+import { Articulo } from 'src/app/interfaces/articulo.model';
+import { ArticuloService } from 'src/app/services/articulos/articulos.service';
+import { catchError, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-redactores',
@@ -11,10 +14,16 @@ export class RedactoresComponent implements OnInit {
   articuloForm: FormGroup = new FormGroup({});
   redactores: any;
   id: number = 0;
-  constructor(private formBuilder: FormBuilder, private redactorService: RedactorService) { }
+  mostrarFormulario: boolean = false;
+  articulos: Articulo[] = [];
+  eliminarForm: FormGroup = new FormGroup({});
+  eliminarId: number = 0;
+
+  constructor(private formBuilder: FormBuilder, private redactorService: RedactorService, private articuloService: ArticuloService) { }
 
   ngOnInit() {
     this.articuloForm = this.formBuilder.group({
+      id: ['', Validators.required],
       titulo: ['', Validators.required],
       contenido: ['', Validators.required],
       fechaPublicacion: ['', Validators.required],
@@ -26,49 +35,60 @@ export class RedactoresComponent implements OnInit {
       redactores => this.redactores = redactores,
       error => console.error(error)
     );
+
+    this.articuloService.obtenerTodosLosArticulos().subscribe(
+      (articulos: Articulo[]) => this.articulos = articulos,
+      error => console.error(error)
+    );
+
+    this.eliminarForm = this.formBuilder.group({
+      articuloId: ['', Validators.required]
+    });
   }
 
   onFormSubmit() {
-    console.log("onFormSubmit() fue llamado");
     if (this.articuloForm.valid) {
-        const articulo = this.articuloForm.value;
-        const redactorId = articulo.redactorId;
-        if (redactorId == null) {
-            console.error('redactorId es nulo');
-            return;
-        }
-        const formData = new FormData();
-        Object.keys(articulo).forEach(key => {
-            if (key !== 'imagen' && key !== 'redactorId') {
-                formData.append(key, articulo[key]);
-            }
-        });
-        if (this.articuloForm.get('imagen')) {
-          const imagen = this.articuloForm.get('imagen')?.value;
-          const imagenType = imagen.type; // Obtén el tipo de la imagen
-          const imagenBlob = new Blob([imagen], { type: imagenType }); // Usa el tipo de la imagen
-          formData.append('imagen', imagenBlob);
+      const articulo = this.articuloForm.value;
+      const redactorId = articulo.redactorId;
+      const articuloId = articulo.id;
+      if (redactorId == null || articuloId == null) {
+        console.error('redactorId o articuloId es nulo');
+        return;
       }
-        // Convertir el objeto articulo a un string JSON y añadirlo al objeto formData
-        const articuloCopy = { ...articulo };
-        delete articuloCopy.imagen;
-        delete articuloCopy.redactorId;
-        const articuloStr = JSON.stringify(articuloCopy);
-        formData.append('articulo', articuloStr);
-        formData.append('redactorId', redactorId.toString());
+      const formData = new FormData();
+      Object.keys(articulo).forEach(key => {
+        if (key !== 'imagen' && key !== 'redactorId' && key !== 'id') {
+          formData.append(key, articulo[key]);
+        }
+      });
+      if (this.articuloForm.get('imagen')) {
+        const imagen = this.articuloForm.get('imagen')?.value;
+        const imagenType = imagen.type; // Coge el tipo de la imagen
+        const imagenBlob = new Blob([imagen], { type: imagenType }); // Usa el tipo de la imagen
+        formData.append('imagen', imagenBlob);
+      }
+      // Convertir el objeto articulo a un string JSON y añadirlo al objeto formData
+      const articuloCopy = { ...articulo };
+      delete articuloCopy.imagen;
+      delete articuloCopy.redactorId;
+      delete articuloCopy.id;
+      const articuloStr = JSON.stringify(articuloCopy);
+      formData.append('articulo', articuloStr);
+      formData.append('redactorId', redactorId.toString());
 
-        // Llamar a tu servicio para enviar los datos al servidor
-        this.redactorService.crearArticulo(redactorId, formData).subscribe(
-            response => {
-                console.log('Artículo creado con éxito', response);
-            },
-            error => {
-                console.error('Hubo un error al crear el artículo', error);
-            }
-        );
+      // Llama al servicio para enviar los datos al servidor
+      this.redactorService.modificarArticulo(redactorId, articuloId, formData).subscribe(
+        response => {
+          console.log('Artículo modificado con éxito', response);
+          this.mostrarFormulario = false; // Oculta el formulario después de enviarlo
+        },
+        error => {
+          console.error('Hubo un error al modificar el artículo', error);
+        }
+      );
     }
-}
-  
+  }
+
   onFileChange(event: Event) {
     const target = event.target as HTMLInputElement;
     const file: File = (target.files as FileList)[0];
@@ -78,18 +98,31 @@ export class RedactoresComponent implements OnInit {
   }
 
   modificarArticulo() {
-    // Aquí va tu código para modificar el artículo
+    this.mostrarFormulario = true;
   }
 
-  eliminarArticulo(id: number) {
-    this.redactorService.eliminarArticulo(id).subscribe(
+  eliminarArticulo() {
+    let articuloId = this.eliminarForm.get('articuloId')?.value;
+    if (articuloId == null) {
+      console.error('articuloId es nulo');
+      return;
+    }
+  
+    this.redactorService.eliminarArticulo(articuloId).pipe(
+      catchError(error => {
+        if (error.status === 404) {
+          console.error('No se encontró el artículo con id ' + articuloId);
+        } else {
+          console.error('Hubo un error al eliminar el artículo', error);
+        }
+        return throwError(error);
+      })
+    ).subscribe(
       () => {
         console.log('Artículo eliminado');
-        // Aquí puedes manejar la respuesta del servidor
       },
       error => {
-        console.error(error);
-        // Aquí puedes manejar los errores
+        console.error('Hubo un error al eliminar el artículo', error);
       }
     );
   }

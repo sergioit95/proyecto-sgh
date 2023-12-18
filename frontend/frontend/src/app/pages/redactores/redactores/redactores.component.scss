@@ -20,9 +20,15 @@ form {
     }
   }
 
+
   button {
     margin-top: 10%;
     padding: 0.5em 1em;
+
+    .botonModificar { /* Añade esta clase para centrar específicamente el botón "Modificar Artículo" */
+      margin-top: 10%;
+      padding-right: 50%;
+    }
   }
 }
 

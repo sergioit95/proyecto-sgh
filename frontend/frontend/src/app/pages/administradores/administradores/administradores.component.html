@@ -52,7 +52,16 @@
   </form>
 </div>
 
-
+<div>
+  <h2>Administradores</h2>
+  <ul>
+    <li *ngFor="let administrador of administradores">
+      {{ administrador.nombre }} {{ administrador.apellidos }}
+      <button (click)="cargarAdministradores()">Cargar</button>
+      <button (click)="eliminarAdministrador(administrador.id || 0)">Eliminar</button>
+    </li>
+  </ul>
+</div>
 
 <div>
   <h2>Redactores</h2>

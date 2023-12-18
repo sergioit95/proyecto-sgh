@@ -39,11 +39,23 @@ public class RedactorService {
 	        return articuloRepository.save(articulo);
 	    }
 
-    public Articulo modificarArticulo(Articulo articulo) {
-        return articuloRepository.save(articulo);
-    }
+
+	    public Articulo modificarArticulo(Articulo articulo, Long redactorId) {
+	        // Buscar el redactor por id
+	        Redactor redactor = redactorRepository.findById(redactorId)
+	            .orElseThrow(() -> new RuntimeException("No se encontró el redactor con id " + redactorId));
+
+	        // Asociar el artículo con el redactor
+	        articulo.setRedactor(redactor);
+
+	        // Guardar el artículo en la base de datos
+	        return articuloRepository.save(articulo);
+	    }
 
     public void eliminarArticulo(Long id) {
+        if (id == null || id <= 0 || !articuloRepository.existsById(id)) {
+            throw new RuntimeException("No se encontró el artículo con id " + id);
+        }
         articuloRepository.deleteById(id);
     }
     

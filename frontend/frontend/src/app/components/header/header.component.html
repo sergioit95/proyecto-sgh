@@ -1,6 +1,15 @@
 <div class="header">
+    <a routerLink="/">
     <app-title 
-    [title]="pageTitle"
-    (dataFromChild)="onDataCheck($event)"
+      [title]="pageTitle"
+      (dataFromChild)="onDataCheck($event)"
     ></app-title>
-</div>
+  </a>
+  
+    <nav>
+      <ul>
+        <li><a routerLink="/administradores" routerLinkActive="active">Panel de Administración</a></li>
+        <li><a routerLink="/redactores" routerLinkActive="active">Panel de Redacción</a></li>
+      </ul>
+    </nav>
+  </div>

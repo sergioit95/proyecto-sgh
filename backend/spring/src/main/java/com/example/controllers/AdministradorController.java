@@ -10,6 +10,8 @@ import com.example.services.AdministradorService;
 import com.example.models.Administrador;
 import com.example.models.Redactor;
 
+
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/administradores")
 public class AdministradorController {

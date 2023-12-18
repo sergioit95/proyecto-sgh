@@ -32,5 +32,55 @@
   <button type="submit">Crear Artículo</button>
 </form>
 
-<button (click)="modificarArticulo()">Modificar Artículo</button>
-<button (click)="eliminarArticulo(id)">Eliminar Artículo</button>
+<div class="botonModificar">
+  <button (click)="modificarArticulo()">Modificar Artículo</button>
+</div>
+<form *ngIf="mostrarFormulario" [formGroup]="articuloForm" (ngSubmit)="onFormSubmit()">
+  <div>
+    <label for="titulo">Título</label>
+    <input id="titulo" type="text" formControlName="titulo">
+    <div *ngIf="articuloForm.controls['titulo'].invalid && (articuloForm.controls['titulo'].dirty || articuloForm.controls['titulo'].touched)">
+      El título es requerido.
+    </div>
+  </div>
+
+  <div>
+    <label for="id">ID del Artículo</label>
+    <select id="id" formControlName="id">
+      <option *ngFor="let articulo of articulos" [value]="articulo.id">{{articulo.id}}</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="contenido">Contenido</label>
+    <textarea id="contenido" formControlName="contenido"></textarea>
+  </div>
+
+  <div>
+    <label for="fechaPublicacion">Fecha de Publicación</label>
+    <input id="fechaPublicacion" type="date" formControlName="fechaPublicacion">
+  </div>
+
+  <div>
+    <label for="imagen">Imagen</label>
+    <input id="imagen" type="file" (change)="onFileChange($event)">
+  </div>
+
+  <div>
+    <label for="redactorId">Redactor</label>
+    <select id="redactorId" formControlName="redactorId">
+      <option *ngFor="let redactor of redactores" [value]="redactor.id">{{redactor.nombre}}</option>
+    </select>
+  </div>
+
+  <button type="submit">Modificar Artículo</button>
+</form>
+<form [formGroup]="eliminarForm">
+  <div>
+    <label for="eliminarId">ID del Artículo a Eliminar</label>
+    <select id="articuloId" formControlName="articuloId">
+      <option *ngFor="let articulo of articulos" [value]="articulo.id">{{articulo.id}}</option>
+    </select>
+  </div>
+  <button (click)="eliminarArticulo()">Eliminar Artículo</button>
+</form>
